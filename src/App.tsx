@@ -45,10 +45,10 @@ export const App: React.FC = () => {
   // Splash Screen view state
   const [showSplash, setShowSplash] = useState(true);
 
-  // Theme state (Dark mode native)
+  // Theme state (Modo Claro por defecto)
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     const saved = localStorage.getItem('polares_dark_mode');
-    return saved !== null ? saved === 'true' : true;
+    return saved !== null ? saved === 'true' : false;
   });
 
   // Navigation tab state
@@ -372,6 +372,8 @@ export const App: React.FC = () => {
     return (
       <SplashScreen
         storeConfig={storeConfig}
+        darkMode={darkMode}
+        onToggleTheme={() => setDarkMode(!darkMode)}
         onEnterCatalog={(categoryId) => {
           if (categoryId) setSelectedCategory(categoryId);
           setShowSplash(false);

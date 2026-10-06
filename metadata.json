@@ -1,0 +1,6 @@
+{
+  "name": "Polares Gelato Italiano - Catálogo & Delivery WhatsApp",
+  "description": "Web App móvil de catálogo interactivo y pedidos delivery directos por WhatsApp para Polares Auténtico Gelato Italiano.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

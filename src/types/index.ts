@@ -1,4 +1,4 @@
-export type CategoryId = 'todos' | 'potes' | 'waffles' | 'bebidas' | 'cafeteria';
+export type CategoryId = 'todos' | 'helados' | 'postres' | 'jugos' | 'waffles';
 
 export interface GelatoFlavor {
   id: string;

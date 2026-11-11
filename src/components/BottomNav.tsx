@@ -1,20 +1,18 @@
 import React from 'react';
-import { Store, Compass, ReceiptText, Heart } from 'lucide-react';
+import { Store, Compass, Heart } from 'lucide-react';
 
-export type NavTab = 'inicio' | 'explorar' | 'pedidos' | 'favoritos';
+export type NavTab = 'inicio' | 'explorar' | 'favoritos';
 
 interface BottomNavProps {
   activeTab: NavTab;
   onTabChange: (tab: NavTab) => void;
   favoritesCount: number;
-  ordersCount: number;
 }
 
 export const BottomNav: React.FC<BottomNavProps> = ({
   activeTab,
   onTabChange,
   favoritesCount,
-  ordersCount,
 }) => {
   const tabs = [
     {
@@ -25,15 +23,9 @@ export const BottomNav: React.FC<BottomNavProps> = ({
     },
     {
       id: 'explorar' as NavTab,
-      label: 'Explorar',
+      label: 'Catálogo',
       icon: Compass,
       badge: 0,
-    },
-    {
-      id: 'pedidos' as NavTab,
-      label: 'Pedidos',
-      icon: ReceiptText,
-      badge: ordersCount,
     },
     {
       id: 'favoritos' as NavTab,
@@ -45,7 +37,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-30 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-lg border-t border-neutral-200 dark:border-neutral-800 transition-colors pb-safe">
-      <div className="max-w-md mx-auto grid grid-cols-4 h-16 items-center px-1">
+      <div className="max-w-md mx-auto grid grid-cols-3 h-16 items-center px-2">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
           const Icon = tab.icon;
@@ -60,34 +52,19 @@ export const BottomNav: React.FC<BottomNavProps> = ({
                   : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200'
               }`}
             >
-              {/* Icon Container with Badge */}
               <div className="relative">
-                <Icon
-                  className={`w-5 h-5 transition-transform ${
-                    isActive ? 'scale-110 stroke-[2.4]' : 'stroke-[1.8]'
-                  }`}
-                />
+                <Icon className={`w-5 h-5 transition-transform ${isActive ? 'scale-110 text-amber-500' : ''}`} />
                 {tab.badge > 0 && (
-                  <span className="absolute -top-1.5 -right-2.5 min-w-[16px] h-4 px-1 rounded-full bg-amber-500 text-neutral-950 text-[10px] font-extrabold flex items-center justify-center leading-none shadow-sm">
+                  <span className="absolute -top-1 -right-2 bg-rose-500 text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center animate-scale-up">
                     {tab.badge}
                   </span>
                 )}
               </div>
-
-              {/* Label */}
-              <span
-                className={`text-[10px] tracking-tight mt-1 transition-colors ${
-                  isActive
-                    ? 'text-amber-600 dark:text-amber-400 font-bold'
-                    : 'text-neutral-500 dark:text-neutral-400 font-medium'
-                }`}
-              >
+              <span className={`text-[11px] mt-1 ${isActive ? 'font-bold text-amber-600 dark:text-amber-400' : 'font-medium'}`}>
                 {tab.label}
               </span>
-
-              {/* Active Dot Indicator */}
               {isActive && (
-                <span className="absolute bottom-1 w-1 h-1 rounded-full bg-amber-500" />
+                <span className="absolute bottom-1 w-6 h-0.5 bg-amber-500 rounded-full" />
               )}
             </button>
           );

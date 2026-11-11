@@ -3,17 +3,14 @@ import {
   Product,
   CartItem,
   Order,
-  DeliveryZone,
   CategoryId,
   StoreConfig,
-  PromotionSlide,
   OrderStatus,
 } from './types';
 import {
   STORE_DEFAULT_CONFIG,
   INITIAL_PRODUCTS,
   PROMOTIONS,
-  DELIVERY_ZONES,
 } from './data/catalog';
 import { SplashScreen } from './components/SplashScreen';
 import { Header } from './components/Header';
@@ -23,8 +20,6 @@ import { ProductCard } from './components/ProductCard';
 import { ProductModal } from './components/ProductModal';
 import { FloatingCartBar } from './components/FloatingCartBar';
 import { CartDrawer } from './components/CartDrawer';
-import { CheckoutModal } from './components/CheckoutModal';
-import { OrdersView } from './components/OrdersView';
 import { FavoritesView } from './components/FavoritesView';
 import { AdminModal } from './components/AdminModal';
 import {
@@ -33,11 +28,8 @@ import {
   Flame,
   IceCream,
   GlassWater,
-  Coffee,
+  Utensils,
   Sparkles,
-  MapPin,
-  Clock,
-  ShieldCheck,
   Percent,
 } from 'lucide-react';
 
@@ -51,41 +43,37 @@ export const App: React.FC = () => {
     return saved !== null ? saved === 'true' : false;
   });
 
-  // Navigation tab state
+  // Navigation tab state (Inicio, Catálogo, Favoritos)
   const [activeTab, setActiveTab] = useState<NavTab>('inicio');
 
   // Business and Catalog State (Synchronized in real-time)
   const [storeConfig, setStoreConfig] = useState<StoreConfig>(() => {
-    const saved = localStorage.getItem('polares_store_config');
+    const saved = localStorage.getItem('lucuma_store_config_v2');
     return saved ? JSON.parse(saved) : STORE_DEFAULT_CONFIG;
   });
 
   const [products, setProducts] = useState<Product[]>(() => {
-    const saved = localStorage.getItem('polares_products');
+    const saved = localStorage.getItem('lucuma_products_v2');
     return saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
   });
 
   // Cart state
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
-    const saved = localStorage.getItem('polares_cart');
+    const saved = localStorage.getItem('lucuma_cart');
     return saved ? JSON.parse(saved) : [];
   });
 
   // Favorites state
   const [favoriteIds, setFavoriteIds] = useState<string[]>(() => {
-    const saved = localStorage.getItem('polares_favorites');
-    return saved ? JSON.parse(saved) : ['bubble-waffle', 'pote-1-litro'];
+    const saved = localStorage.getItem('lucuma_favorites');
+    return saved ? JSON.parse(saved) : ['pote-1-litro', 'cheesecake-lucuma'];
   });
 
-  // Orders history state
+  // Orders internal record state
   const [orders, setOrders] = useState<Order[]>(() => {
-    const saved = localStorage.getItem('polares_orders');
+    const saved = localStorage.getItem('lucuma_orders');
     return saved ? JSON.parse(saved) : [];
   });
-
-  // District / Shipping Zone state
-  const [selectedZone, setSelectedZone] = useState<DeliveryZone>(DELIVERY_ZONES[0]);
-  const [tip, setTip] = useState<number>(2);
 
   // Coupon state
   const [appliedCoupon, setAppliedCoupon] = useState<string>('');
@@ -93,7 +81,6 @@ export const App: React.FC = () => {
 
   // Modals & Drawers state
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [selectedProductForModal, setSelectedProductForModal] = useState<Product | null>(null);
 
@@ -113,23 +100,23 @@ export const App: React.FC = () => {
   }, [darkMode]);
 
   useEffect(() => {
-    localStorage.setItem('polares_cart', JSON.stringify(cartItems));
+    localStorage.setItem('lucuma_cart', JSON.stringify(cartItems));
   }, [cartItems]);
 
   useEffect(() => {
-    localStorage.setItem('polares_favorites', JSON.stringify(favoriteIds));
+    localStorage.setItem('lucuma_favorites', JSON.stringify(favoriteIds));
   }, [favoriteIds]);
 
   useEffect(() => {
-    localStorage.setItem('polares_orders', JSON.stringify(orders));
+    localStorage.setItem('lucuma_orders', JSON.stringify(orders));
   }, [orders]);
 
   useEffect(() => {
-    localStorage.setItem('polares_products', JSON.stringify(products));
+    localStorage.setItem('lucuma_products_v2', JSON.stringify(products));
   }, [products]);
 
   useEffect(() => {
-    localStorage.setItem('polares_storeConfig', JSON.stringify(storeConfig));
+    localStorage.setItem('lucuma_store_config_v2', JSON.stringify(storeConfig));
   }, [storeConfig]);
 
   // Derived financial totals
@@ -141,23 +128,18 @@ export const App: React.FC = () => {
     return cartItems.reduce((sum, item) => sum + item.quantity, 0);
   }, [cartItems]);
 
-  const deliveryCost = useMemo(() => {
-    return selectedZone.id === 'pickup' ? 0 : selectedZone.price;
-  }, [selectedZone]);
-
   const calculatedDiscount = useMemo(() => {
     if (!appliedCoupon) return 0;
-    if (appliedCoupon === 'POLARES10') return subtotal * 0.10;
+    if (appliedCoupon === 'LUCUMA10' || appliedCoupon === 'POLARES10') return subtotal * 0.10;
     if (appliedCoupon === 'GELATOLOVE') return subtotal * 0.15;
     if (appliedCoupon === 'VERANO') return Math.min(5, subtotal);
-    if (appliedCoupon === 'ENVIOGRATIS') return deliveryCost;
     return 0;
-  }, [appliedCoupon, subtotal, deliveryCost]);
+  }, [appliedCoupon, subtotal]);
 
   const grandTotal = useMemo(() => {
-    const val = subtotal - calculatedDiscount + deliveryCost + tip;
+    const val = subtotal - calculatedDiscount;
     return Math.max(0, val);
-  }, [subtotal, calculatedDiscount, deliveryCost, tip]);
+  }, [subtotal, calculatedDiscount]);
 
   // Cart item quantities map for quick +/- display
   const cartQuantities = useMemo(() => {
@@ -201,13 +183,11 @@ export const App: React.FC = () => {
   };
 
   const handleQuickAdd = (product: Product) => {
-    // If product has options or maxFlavors > 1, open modal for proper taste selection
     if (product.maxFlavors && product.maxFlavors > 1) {
       setSelectedProductForModal(product);
       return;
     }
-    // Otherwise 1-click quick add
-    handleAddToCart(product, 1, ['Pistacchio Puro di Bronte']);
+    handleAddToCart(product, 1, ['Lúcuma de Seda Pura (Especialidad)']);
   };
 
   const handleQuickDecrease = (product: Product) => {
@@ -247,10 +227,10 @@ export const App: React.FC = () => {
   // Coupon handler
   const handleApplyCoupon = (code: string) => {
     const normalized = code.trim().toUpperCase();
-    if (normalized === 'POLARES10') {
-      setAppliedCoupon('POLARES10');
+    if (normalized === 'LUCUMA10' || normalized === 'POLARES10') {
+      setAppliedCoupon('LUCUMA10');
       setCouponDiscount(subtotal * 0.10);
-      return { success: true, message: '¡Cupón POLARES10 aplicado! Tienes 10% de descuento.' };
+      return { success: true, message: '¡Cupón LUCUMA10 aplicado! Tienes 10% de descuento.' };
     }
     if (normalized === 'GELATOLOVE') {
       setAppliedCoupon('GELATOLOVE');
@@ -262,12 +242,7 @@ export const App: React.FC = () => {
       setCouponDiscount(5);
       return { success: true, message: '¡Cupón VERANO aplicado! S/ 5.00 de descuento directo.' };
     }
-    if (normalized === 'ENVIOGRATIS') {
-      setAppliedCoupon('ENVIOGRATIS');
-      setCouponDiscount(deliveryCost);
-      return { success: true, message: '¡Cupón ENVIOGRATIS aplicado! Tu envío ahora es gratis.' };
-    }
-    return { success: false, message: 'Cupón no válido o expirado. Prueba POLARES10.' };
+    return { success: false, message: 'Cupón no válido o expirado. Prueba LUCUMA10.' };
   };
 
   const handleRemoveCoupon = () => {
@@ -285,7 +260,7 @@ export const App: React.FC = () => {
   };
 
   // Order created callback
-  const handleOrderCreated = (newOrder: Order) => {
+  const handleOrderCreated = (newOrder: any) => {
     setOrders([newOrder, ...orders]);
     setCartItems([]);
     setAppliedCoupon('');
@@ -358,13 +333,13 @@ export const App: React.FC = () => {
     return products.filter((p) => p.isFeatured && p.isAvailable);
   }, [products]);
 
-  // Categories list
+  // Categories list tailored for Lúcuma: postres, helados, jugos y waffles
   const categoriesConfig = [
     { id: 'todos' as CategoryId, label: 'Todos', icon: Sparkles },
-    { id: 'potes' as CategoryId, label: 'Potes Para Llevar', icon: IceCream },
-    { id: 'waffles' as CategoryId, label: 'Bubble Waffles', icon: Flame },
-    { id: 'bebidas' as CategoryId, label: 'Milkshakes', icon: GlassWater },
-    { id: 'cafeteria' as CategoryId, label: 'Affogato & Café', icon: Coffee },
+    { id: 'helados' as CategoryId, label: 'Helados', icon: IceCream },
+    { id: 'postres' as CategoryId, label: 'Postres', icon: Utensils },
+    { id: 'jugos' as CategoryId, label: 'Jugos & Batidos', icon: GlassWater },
+    { id: 'waffles' as CategoryId, label: 'Waffles', icon: Flame },
   ];
 
   // If on Splash screen, render splash screen directly
@@ -419,35 +394,11 @@ export const App: React.FC = () => {
                 }}
               />
 
-              {/* Delivery info & Value bar */}
-              <div className="p-3 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/20 flex items-center justify-between text-xs">
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center">
-                    <MapPin className="w-3.5 h-3.5" />
-                  </div>
-                  <div>
-                    <span className="font-bold text-neutral-900 dark:text-white block leading-tight text-[11px]">
-                      Delivery en {selectedZone.name}
-                    </span>
-                    <span className="text-[10px] text-neutral-500 dark:text-neutral-400">
-                      Empaque térmico anti-deshielo incluido
-                    </span>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => setIsCartOpen(true)}
-                  className="px-2.5 py-1 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-[10px] font-bold text-amber-600 dark:text-amber-400 cursor-pointer shadow-xs"
-                >
-                  Cambiar
-                </button>
-              </div>
-
               {/* Quick Category Chips */}
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs font-bold text-neutral-900 dark:text-white uppercase tracking-wider">
-                    Categorías
+                    Categorías de Lúcuma
                   </span>
                   <button
                     onClick={() => setActiveTab('explorar')}
@@ -485,21 +436,21 @@ export const App: React.FC = () => {
               {/* Coupon Banner */}
               <div className="p-3 rounded-2xl bg-neutral-900 text-white flex items-center justify-between border border-neutral-800 shadow-sm">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-xl bg-amber-500 text-neutral-950 flex items-center justify-center font-bold">
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 text-neutral-950 flex items-center justify-center font-bold">
                     <Percent className="w-4 h-4" />
                   </div>
                   <div>
                     <span className="text-xs font-bold block leading-tight">
                       10% OFF en tu pedido
                     </span>
-                    <span className="text-[10px] text-amber-400 font-mono">
-                      Usa el cupón: POLARES10
+                    <span className="text-[10px] text-amber-400 font-mono font-bold">
+                      Usa el cupón: LUCUMA10
                     </span>
                   </div>
                 </div>
                 <button
                   onClick={() => {
-                    handleApplyCoupon('POLARES10');
+                    handleApplyCoupon('LUCUMA10');
                     setIsCartOpen(true);
                   }}
                   className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-neutral-950 text-xs font-bold active:scale-95 transition-all cursor-pointer"
@@ -514,11 +465,11 @@ export const App: React.FC = () => {
                   <div className="flex items-center gap-1.5">
                     <Sparkles className="w-3.5 h-3.5 text-amber-500" />
                     <h3 className="font-display font-bold text-sm text-neutral-900 dark:text-white uppercase tracking-wider">
-                      Los Más Pedidos
+                      Favoritos con Lúcuma
                     </h3>
                   </div>
                   <span className="text-[11px] text-neutral-600 dark:text-neutral-300">
-                    Mantecado fresco hoy
+                    Frescos del día
                   </span>
                 </div>
 
@@ -540,7 +491,7 @@ export const App: React.FC = () => {
             </div>
           )}
 
-          {/* TAB 2: EXPLORAR */}
+          {/* TAB 2: EXPLORAR / CATÁLOGO */}
           {activeTab === 'explorar' && (
             <div className="space-y-4 pb-24">
               {/* Search Bar Input */}
@@ -550,7 +501,7 @@ export const App: React.FC = () => {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Buscar gelato, waffle, pistacho, chocolate..."
+                  placeholder="Buscar helados de lúcuma, cheesecake, jugos, waffles..."
                   className="w-full text-xs pl-10 pr-3 py-2.5 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder:text-neutral-400 focus:outline-none focus:border-amber-500 shadow-inner"
                 />
                 {searchQuery && (
@@ -607,7 +558,7 @@ export const App: React.FC = () => {
               {/* Products List Grid */}
               {filteredProducts.length === 0 ? (
                 <div className="p-8 text-center bg-neutral-50 dark:bg-neutral-800/50 rounded-2xl border border-neutral-200 dark:border-neutral-700 text-xs text-neutral-500">
-                  <p className="mb-2 font-semibold">No encontramos productos con ese filtro.</p>
+                  <p className="mb-2 font-semibold">No encontramos delicias con ese filtro.</p>
                   <button
                     onClick={() => {
                       setSearchQuery('');
@@ -637,19 +588,7 @@ export const App: React.FC = () => {
             </div>
           )}
 
-          {/* TAB 3: PEDIDOS */}
-          {activeTab === 'pedidos' && (
-            <OrdersView
-              orders={orders}
-              storeConfig={storeConfig}
-              onGoToCatalog={() => {
-                setActiveTab('inicio');
-                setSelectedCategory('todos');
-              }}
-            />
-          )}
-
-          {/* TAB 4: FAVORITOS */}
+          {/* TAB 3: FAVORITOS */}
           {activeTab === 'favoritos' && (
             <FavoritesView
               favoriteProducts={favoriteProductsList}
@@ -671,15 +610,14 @@ export const App: React.FC = () => {
           totalItems={totalCartCount}
           totalAmount={grandTotal}
           onOpenCart={() => setIsCartOpen(true)}
-          isVisible={totalCartCount > 0 && !isCartOpen && !isCheckoutOpen}
+          isVisible={totalCartCount > 0 && !isCartOpen}
         />
 
-        {/* Fixed Mobile Bottom Navigation */}
+        {/* Fixed Mobile Bottom Navigation (Inicio, Catálogo, Favoritos) */}
         <BottomNav
           activeTab={activeTab}
           onTabChange={(tab) => setActiveTab(tab)}
           favoritesCount={favoriteIds.length}
-          ordersCount={orders.length}
         />
 
         {/* Customization Modal */}
@@ -692,46 +630,22 @@ export const App: React.FC = () => {
           onToggleFavorite={handleToggleFavorite}
         />
 
-        {/* Sliding Cart Drawer */}
+        {/* Direct One-Step Order Drawer with Name, Phone, Address, Yape & WhatsApp */}
         <CartDrawer
           isOpen={isCartOpen}
           onClose={() => setIsCartOpen(false)}
           items={cartItems}
           onUpdateQuantity={handleUpdateQuantity}
           onRemoveItem={handleRemoveItem}
-          selectedZone={selectedZone}
-          onSelectZone={setSelectedZone}
-          tip={tip}
-          onSelectTip={setTip}
           couponCode={appliedCoupon}
           discountAmount={calculatedDiscount}
           onApplyCoupon={handleApplyCoupon}
           onRemoveCoupon={handleRemoveCoupon}
           subtotal={subtotal}
           total={grandTotal}
-          onProceedToCheckout={() => {
-            setIsCartOpen(false);
-            setIsCheckoutOpen(true);
-          }}
-          onExplore={() => {
-            setActiveTab('explorar');
-          }}
-        />
-
-        {/* Checkout & Local Payment Modal with WhatsApp Redirect */}
-        <CheckoutModal
-          isOpen={isCheckoutOpen}
-          onClose={() => setIsCheckoutOpen(false)}
-          items={cartItems}
-          selectedZone={selectedZone}
-          onSelectZone={setSelectedZone}
-          tip={tip}
-          couponCode={appliedCoupon}
-          discountAmount={calculatedDiscount}
-          subtotal={subtotal}
-          total={grandTotal}
           storeConfig={storeConfig}
-          onOrderCreated={handleOrderCreated}
+          onOrderCompleted={handleOrderCreated}
+          onExplore={() => setActiveTab('explorar')}
         />
 
         {/* Real-time Business & Stock Management Modal */}

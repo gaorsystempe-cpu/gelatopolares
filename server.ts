@@ -14,21 +14,21 @@ async function startServer() {
 
   // In-memory backend database for instant sync
   let storeConfig = {
-    name: "Polares Auténtico Gelato Italiano",
-    tagline: "Gelato Artesanal Italiano | 100% Artesanal y de calidad superior",
+    name: "Lúcuma - Postres, Helados & Jugos",
+    tagline: "El Auténtico Sabor del Oro de los Incas | Postres, Helados y Jugos Artesanales",
     phone: "51944774086",
     whatsappFormatted: "+51 944 774 086",
-    address: "Calle Real 640, Centro de Huancayo - Junín, Perú",
+    address: "Av. Principal 640 - Perú",
     openHoursWeekday: "10:00 a. m. - 10:00 p. m.",
     openHoursSunday: "11:00 a. m. - 6:30 p. m.",
     isOpenNow: true,
     yapeNumber: "944 774 086",
-    yapeHolder: "Polares Gelato Italiano S.A.C.",
+    yapeHolder: "Lúcuma Postres & Helados S.A.C.",
     bcpAccount: "193-9823415-0-82",
     bcpCci: "002-193-009823415082-14",
-    bcpHolder: "Polares Gelato Italiano S.A.C.",
+    bcpHolder: "Lúcuma Postres & Helados S.A.C.",
     plinNumber: "944 774 086",
-    plinHolder: "Polares Gelato Italiano S.A.C.",
+    plinHolder: "Lúcuma Postres & Helados S.A.C.",
   };
 
   let orders: any[] = [];

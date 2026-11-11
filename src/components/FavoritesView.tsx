@@ -28,10 +28,10 @@ export const FavoritesView: React.FC<FavoritesViewProps> = ({
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-bold font-display text-neutral-900 dark:text-white">
-            Tus Favoritos Polares
+            Tus Favoritos Lúcuma
           </h2>
           <p className="text-xs text-neutral-500 dark:text-neutral-400">
-            Los sabores y especialidades que más amas, a un solo toque de distancia
+            Tus postres, helados y jugos preferidos, a un solo toque de distancia
           </p>
         </div>
         <div className="w-8 h-8 rounded-xl bg-rose-500/10 text-rose-500 flex items-center justify-center">
@@ -54,7 +54,7 @@ export const FavoritesView: React.FC<FavoritesViewProps> = ({
             onClick={onGoToCatalog}
             className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold text-xs shadow-md shadow-amber-500/20 active:scale-95 transition-all cursor-pointer font-display"
           >
-            Explorar Gelatos & Waffles
+            Explorar Helados, Postres & Jugos
           </button>
         </div>
       ) : (

@@ -1,6 +1,6 @@
 # Polares Auténtico Gelato Italiano - Web App Delivery & Catálogo
 
-Web App móvil de catálogo interactivo y pedidos delivery directos por WhatsApp, estilo aplicación nativa (Rappi / PedidosYa), desarrollada con **React 19**, **TypeScript**, **Tailwind CSS v4** y **Vite**, optimizada para **Huancayo, Junín - Perú**.
+Web App móvil de catálogo interactivo y pedidos delivery directos por WhatsApp, estilo aplicación nativa (Rappi / PedidosYa), desarrollada con **React 19**, **TypeScript**, **Tailwind CSS v4** y **Vite**, optimizada para **Perú**.
 
 ---
 
@@ -72,7 +72,7 @@ vercel --prod
   - Selector de sabores artesanales (*Pistacchio Puro di Bronte, Cioccolato Fondente 70%, Stracciatella, Dulce de Leche, etc.*) y toppings.
 - **🛒 Carrito & Checkout:**
   - Drawer deslizante con cálculo de subtotales.
-  - Cobertura de delivery y tarifas por distrito en **Huancayo** (*Huancayo Centro, El Tambo, Chilca, Pilcomayo, etc.*) y opción de Recojo en Tienda.
+  - Cobertura de delivery y tarifas por distrito por zonas o distritos y opción de Recojo en Tienda.
   - Propina voluntaria para el repartidor.
   - Validación de cupones de descuento (`POLARES10`, `ENVIOGRATIS`).
 - **💳 Métodos de Pago Locales:**

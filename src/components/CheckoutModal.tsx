@@ -74,12 +74,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     if (!validate()) return;
 
     // Generate random 4 digit code
-    const orderNum = `POL-${Math.floor(1000 + Math.random() * 9000)}`;
+    const orderNum = `LUC-${Math.floor(1000 + Math.random() * 9000)}`;
     const effectiveDeliveryCost = deliveryType === 'pickup' ? 0 : selectedZone.price;
     const finalTotal = subtotal - discountAmount + effectiveDeliveryCost + tip;
 
     // Build structured WhatsApp message
-    let message = `🍨 *NUEVO PEDIDO POLARES GELATO* #${orderNum}\n`;
+    let message = `🥭 *NUEVO PEDIDO LÚCUMA - POSTRES, HELADOS & JUGOS* #${orderNum}\n`;
     message += `───────────────────────\n`;
     message += `👤 *Cliente:* ${fullName.trim()}\n`;
     message += `📱 *Teléfono:* ${phone.trim()}\n`;
@@ -184,7 +184,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 {createdOrder ? '¡Pedido Generado con Éxito!' : 'Datos de Envío & Pago'}
               </h3>
               <span className="text-[11px] text-neutral-500 dark:text-neutral-400">
-                {createdOrder ? `Orden #${createdOrder.orderNumber}` : 'Polares Gelato Delivery WhatsApp'}
+                {createdOrder ? `Orden #${createdOrder.orderNumber}` : 'Lúcuma Delivery WhatsApp'}
               </span>
             </div>
           </div>
@@ -360,12 +360,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               {deliveryType === 'delivery' ? (
                 <div className="space-y-3 pt-2 border-t border-neutral-200 dark:border-neutral-800">
                   <span className="text-xs font-bold text-neutral-900 dark:text-white uppercase tracking-wider block">
-                    2. Dirección de Envío (Huancayo)
+                    2. Dirección de Envío
                   </span>
 
                   <div>
                     <label className="text-[11px] font-semibold text-neutral-700 dark:text-neutral-300 block mb-1">
-                      Distrito de Huancayo *
+                      Zona o Distrito de Entrega *
                     </label>
                     <select
                       value={selectedZone.id}

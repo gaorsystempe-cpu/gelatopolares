@@ -58,7 +58,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
             </div>
             <div>
               <h3 className="font-display font-bold text-base leading-tight">
-                Panel de Gestión en Vivo - Polares
+                Panel de Gestión en Vivo - Lúcuma
               </h3>
               <span className="text-[11px] text-amber-400 font-medium">
                 Control de Stock, Pedidos y WhatsApp

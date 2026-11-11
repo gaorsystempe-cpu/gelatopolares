@@ -87,7 +87,7 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
             No tienes pedidos recientes
           </h3>
           <p className="text-xs text-neutral-500 dark:text-neutral-400 max-w-xs mx-auto mb-5 leading-relaxed">
-            Cuando realices un pedido de tus gelatos y waffles favoritos, podrás hacer seguimiento en tiempo real desde aquí.
+            Cuando realices un pedido de tus postres, helados y jugos de lúcuma, podrás hacer seguimiento en tiempo real desde aquí.
           </p>
           <button
             onClick={onGoToCatalog}

@@ -22,8 +22,8 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   return (
     <header className="sticky top-0 z-30 w-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md border-b border-neutral-200/80 dark:border-neutral-800 transition-colors">
-      {/* Gelato dripline motif thin accent top stripe */}
-      <div className="h-1 w-full bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500" />
+      {/* Lúcuma golden orange accent top stripe */}
+      <div className="h-1 w-full bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500" />
 
       <div className="max-w-md mx-auto px-3.5 py-2.5 flex items-center justify-between gap-2">
         {/* Left: Button to return to Portada */}
@@ -41,7 +41,7 @@ export const Header: React.FC<HeaderProps> = ({
           <Logo size="sm" showText={false} />
           <div className="flex flex-col text-left">
             <span className="font-display font-bold text-sm tracking-tight text-neutral-900 dark:text-white leading-tight">
-              Polares Gelato
+              Lúcuma
             </span>
             <div className="flex items-center gap-1.5 text-[10px] text-neutral-700 dark:text-neutral-200">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
